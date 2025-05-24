@@ -47,14 +47,22 @@ jobs:
         with:
           name: Fabric and Forge ${{ matrix.minecraft }}
           path: build/release/
+      - name: Get Mod Version
+        run: |
+          MOD_VERSION=$(grep "mod_version=" gradle.properties | cut -d'=' -f2)
+          echo "MOD_VERSION=$MOD_VERSION"
+          echo "MOD_VERSION=$MOD_VERSION" >> $GITHUB_ENV
+      - name: Transform libraries
+        run: |
+          mkdir -p ${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/
+          cp buildSrc/build/libs/buildSrc.jar ${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/mtr-common.jar
+          cp fabric/build/libs/*-sources.jar ${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/mtr-fabric.jar
+          cp forge/build/libs/*-sources.jar ${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/mtr-forge.jar
       - name: Capture libraries
         uses: actions/upload-artifact@main
         with:
-          name: ${{ matrix.minecraft }}
-          path: |
-            buildSrc/build/libs
-            fabric/build/libs
-            forge/build/libs
+          name: ${{ env.MOD_VERSION }}+${{ matrix.minecraft }}
+          path: ${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/
       - name: Post Crowdin translation analysis
         if: ${{ matrix.minecraft == '1.20.4' }}
         run: cat build/translation/analysis.md >> $GITHUB_STEP_SUMMARY
