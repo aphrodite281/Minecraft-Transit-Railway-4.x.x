@@ -74,10 +74,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download release artifacts
-          uses: actions/download-artifact@v4
-          with:
-            path: artifacts
-            merge-multiple: 
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
       - name: Upload libraries
         uses: actions/upload-artifact@main
         with:
