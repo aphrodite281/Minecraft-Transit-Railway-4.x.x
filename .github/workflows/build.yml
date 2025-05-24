@@ -51,15 +51,15 @@ jobs:
           path: build/release/
       - name: Transform libraries
         run: |
-          mkdir -p libs/libraries/${{ matrix.minecraft }}/
-          cp buildSrc/build/libs/buildSrc.jar libs/libraries/${{ matrix.minecraft }}/mtr-common.jar
-          cp fabric/build/libs/*-sources.jar libs/libraries/${{ matrix.minecraft }}/mtr-fabric.jar
-          cp forge/build/libs/*-sources.jar libs/libraries/${{ matrix.minecraft }}/mtr-forge.jar
+          mkdir -p l/libs/${{ matrix.minecraft }}/
+          cp buildSrc/build/libs/buildSrc.jar l/libs/${{ matrix.minecraft }}/mtr-common.jar
+          cp fabric/build/libs/*-sources.jar l/libs/${{ matrix.minecraft }}/mtr-fabric.jar
+          cp forge/build/libs/*-sources.jar l/libs/${{ matrix.minecraft }}/mtr-forge.jar
       - name: Capture libraries
         uses: actions/upload-artifact@main
         with:
           name: Libraries ${{ matrix.minecraft }}
-          path: libs/
+          path: l/
       - name: Post Crowdin translation analysis
         if: ${{ matrix.minecraft == '1.20.4' }}
         run: cat build/translation/analysis.md >> $GITHUB_STEP_SUMMARY
@@ -68,17 +68,24 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download release artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          path: download
           merge-multiple: true
-      - name: Display structure of downloaded files
+      - name: Transform libraries
+        run: |
+          mkdir -p artifacts/libs
+          cp download/libraries/* artifacts/libs/
+          rm -rf download
+      - name: Verify artifacts
         run: ls -lahR artifacts
-      - name: Deploy libraries to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}、
-          publish_dir: ./artifacts/libraries
-          publish_branch: gh-pages
-          destination_dir: libs
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
