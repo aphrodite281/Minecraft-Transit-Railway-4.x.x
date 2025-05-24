@@ -61,6 +61,10 @@ jobs:
   deploy-libraries:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write 
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
