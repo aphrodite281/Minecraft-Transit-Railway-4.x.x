@@ -50,7 +50,6 @@ jobs:
       - name: Transform libraries
         run: |
           mkdir -p l/libs/${{ matrix.minecraft }}/
-          cp buildSrc/build/libs/buildSrc.jar l/libs/${{ matrix.minecraft }}/mtr-common.jar
           cp fabric/build/libs/*-sources.jar l/libs/${{ matrix.minecraft }}/mtr-fabric.jar
           cp forge/build/libs/*-sources.jar l/libs/${{ matrix.minecraft }}/mtr-forge.jar
       - name: Capture libraries
