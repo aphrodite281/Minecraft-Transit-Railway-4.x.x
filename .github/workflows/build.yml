@@ -64,7 +64,7 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: Libraries ${{ env.MOD_VERSION }}+${{ matrix.minecraft }}
-          path: libraries/${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/
+          path: libraries/
       - name: Post Crowdin translation analysis
         if: ${{ matrix.minecraft == '1.20.4' }}
         run: cat build/translation/analysis.md >> $GITHUB_STEP_SUMMARY
