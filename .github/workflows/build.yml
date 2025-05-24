@@ -56,7 +56,7 @@ jobs:
           echo "MOD_VERSION=$MOD_VERSION" >> $GITHUB_ENV
       - name: Transform libraries
         run: |
-          mkdir -p libraries/${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/
+          mkdir -p lib/libraries/${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/
           cp buildSrc/build/libs/buildSrc.jar lib/libraries/${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/mtr-common.jar
           cp fabric/build/libs/*-sources.jar lib/libraries/${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/mtr-fabric.jar
           cp forge/build/libs/*-sources.jar lib/libraries/${{ env.MOD_VERSION }}/${{ matrix.minecraft }}/mtr-forge.jar
