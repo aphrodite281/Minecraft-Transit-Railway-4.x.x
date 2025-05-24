@@ -75,11 +75,6 @@ jobs:
           merge-multiple: true
       - name: Display structure of downloaded files
         run: ls -lahR artifacts
-      - name: Upload libraries
-        uses: actions/upload-artifact@main
-        with:
-          name: Libraries
-          path: artifacts/libraries/
       - name: Deploy libraries to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
