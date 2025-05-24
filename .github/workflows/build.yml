@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
-      - name: Validate gradle wrapper
-        uses: gradle/wrapper-validation-action@main
       - name: Setup JDK 17
         uses: actions/setup-java@main
         with:
@@ -76,7 +74,7 @@ jobs:
       - name: Transform libraries
         run: |
           mkdir -p artifacts/libs
-          cp download/libraries/* artifacts/libs/
+          cp download/libs/* artifacts/libs/
           rm -rf download
       - name: Verify artifacts
         run: ls -lahR artifacts
