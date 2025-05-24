@@ -18,10 +18,12 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
-      - name: Make gradle wrapper executable
-        run: chmod +x ./gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.13
       - name: Setup website files
-        run: ./gradlew fabric:setupWebsiteFiles
+        run: gradle fabric:setupWebsiteFiles
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -32,16 +34,16 @@ jobs:
         run: npm run build --prefix buildSrc/src/main/resources/website
       - name: Setup Fabric files
         if: ${{ matrix.minecraft != '1.20.4' }}
-        run: ./gradlew fabric:setupFiles -PminecraftVersion="${{ matrix.minecraft }}" -PcrowdinApiKey="${{ secrets.CROWDIN_API_KEY }}" -PpatreonApiKey="${{ secrets.PATREON_API_KEY }}"
+        run: gradle fabric:setupFiles -PminecraftVersion="${{ matrix.minecraft }}" -PcrowdinApiKey="${{ secrets.CROWDIN_API_KEY }}" -PpatreonApiKey="${{ secrets.PATREON_API_KEY }}"
       - name: Setup Fabric files
         if: ${{ matrix.minecraft == '1.20.4' }}
-        run: ./gradlew fabric:setupFiles -PminecraftVersion="${{ matrix.minecraft }}" -PcrowdinApiKey="${{ secrets.CROWDIN_API_KEY }}" -PpatreonApiKey="${{ secrets.PATREON_API_KEY }}" -PgeminiApiKey="${{ secrets.GEMINI_API_KEY }}"
+        run: gradle fabric:setupFiles -PminecraftVersion="${{ matrix.minecraft }}" -PcrowdinApiKey="${{ secrets.CROWDIN_API_KEY }}" -PpatreonApiKey="${{ secrets.PATREON_API_KEY }}" -PgeminiApiKey="${{ secrets.GEMINI_API_KEY }}"
       - name: Setup Forge files
-        run: ./gradlew forge:setupFiles -PminecraftVersion="${{ matrix.minecraft }}"
+        run: gradle forge:setupFiles -PminecraftVersion="${{ matrix.minecraft }}"
       - name: Build ${{ matrix.minecraft }}
-        run: ./gradlew build -PminecraftVersion="${{ matrix.minecraft }}"
+        run: gradle build -PminecraftVersion="${{ matrix.minecraft }}"
       - name: Build ${{ matrix.minecraft }} (server)
-        run: ./gradlew build -PminecraftVersion="${{ matrix.minecraft }}" -PexcludeAssets=true
+        run: gradle build -PminecraftVersion="${{ matrix.minecraft }}" -PexcludeAssets=true
       - name: Capture release artifacts
         uses: actions/upload-artifact@main
         with:
