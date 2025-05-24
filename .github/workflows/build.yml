@@ -45,18 +45,8 @@ jobs:
       - name: Capture release artifacts
         uses: actions/upload-artifact@main
         with:
-          name: Fabric and Forge ${{ matrix.minecraft }}
+          name: ${{ matrix.minecraft }}
           path: build/release/
-      - name: Transform libraries
-        run: |
-          mkdir -p l/libs/${{ matrix.minecraft }}/
-          cp fabric/build/libs/*-sources.jar l/libs/${{ matrix.minecraft }}/mtr-fabric.jar
-          cp forge/build/libs/*-sources.jar l/libs/${{ matrix.minecraft }}/mtr-forge.jar
-      - name: Capture libraries
-        uses: actions/upload-artifact@main
-        with:
-          name: Libraries ${{ matrix.minecraft }}
-          path: l/
   deploy-libraries:
     needs: build
     runs-on: ubuntu-latest
@@ -68,13 +58,8 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: download
+          path: artifacts
           merge-multiple: true
-      - name: Transform libraries
-        run: |
-          mkdir -p artifacts/libs
-          cp -r download/libs artifacts/
-          rm -rf download
       - name: Verify artifacts
         run: ls -lahR artifacts
       - name: Setup Pages
